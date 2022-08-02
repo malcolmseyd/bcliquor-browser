@@ -3,10 +3,11 @@ import { Data } from "./data";
 import _categories from "./categories";
 import { Categories } from "./categories";
 import { useState } from "react";
-import _, { mapKeys } from "lodash";
+import _ from "lodash";
+
+const productURL = "https://www.bcliquorstores.com/product/";
 
 const data = _data as Data[];
-
 const categories = _categories as Categories;
 
 console.log(categories);
@@ -117,7 +118,9 @@ function App() {
               <tr key={id}>
                 {/* <td>{id}</td> */}
                 <td>{i + 1}</td>
-                <td>{name}</td>
+                <td>
+                  <a href={productURL + id}>{name}</a>
+                </td>
                 <td>${price}</td>
                 <td>{volume} L</td>
                 <td>{percent}% </td>
