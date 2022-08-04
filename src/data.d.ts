@@ -1,6 +1,8 @@
 export interface Data {
     id:             string;
+    rank?:          number;
     name:           string;
+    stock:          number;
     price:          number;
     volume:         number;
     percent:        number;
