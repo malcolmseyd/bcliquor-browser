@@ -1,9 +1,9 @@
-import { includes } from "lodash";
 import { useEffect, useState } from "react";
 import { Categories } from "./categories";
 import { Data } from "./data";
+import spaceGIF from "./s.gif";
 
-type FilterState = { categories?: string[] };
+type FilterState = { categories?: string[]; subCategories?: string[] };
 
 // despite the type, only one field can be true at once
 type FilterUIState = null | { categories?: boolean };
@@ -16,6 +16,7 @@ type FilterConfigProps = {
 export function Filter({ setFilter, categories }: FilterConfigProps) {
   const [filterState, setFilterState] = useState<FilterState>({
     categories: Object.keys(categories),
+    subCategories: Object.values(categories).flat(),
   });
   const [filterUI, setFilterUI] = useState<FilterUIState>(null);
 
@@ -26,6 +27,9 @@ export function Filter({ setFilter, categories }: FilterConfigProps) {
         return false;
       }
       if (!filterState.categories?.includes(x.category)) {
+        return false;
+      }
+      if (!filterState.subCategories?.includes(x.subCategory)) {
         return false;
       }
 
@@ -54,28 +58,65 @@ export function Filter({ setFilter, categories }: FilterConfigProps) {
           {filterUI.categories && (
             <div>
               {Object.keys(categories).map((category) => (
-                <div>
-                  {/* TODO add indented subcategories using s.gif (like HN) */}
-                  {category == "Spirits" && <span> {"\t"}</span>}
-                  <input
-                    type="checkbox"
-                    checked={filterState.categories?.includes(category)}
-                    onInput={(e) => {
-                      if (e.currentTarget.checked) {
-                        setFilterState({
-                          categories: filterState.categories?.filter(
-                            (x) => category !== x
-                          ),
-                        });
-                      } else {
-                        setFilterState({
-                          categories: filterState.categories?.concat(category),
-                        });
-                      }
-                    }}
-                  ></input>
-                  {category}
-                </div>
+                <>
+                  <div>
+                    {category == "Spirits" && <span> {"\t"}</span>}
+                    <input
+                      type="checkbox"
+                      checked={filterState.categories?.includes(category)}
+                      onInput={(e) => {
+                        if (e.currentTarget.checked) {
+                          setFilterState((f) => ({
+                            ...f,
+                            categories: filterState.categories?.filter(
+                              (x) => category !== x
+                            ),
+                          }));
+                        } else {
+                          setFilterState((f) => ({
+                            ...f,
+                            categories:
+                              filterState.categories?.concat(category),
+                          }));
+                        }
+                      }}
+                    ></input>
+                    {category}
+                  </div>
+                  {filterState.categories?.includes(category) &&
+                    categories[category as keyof Categories].map(
+                      (subCategory) => (
+                        <div>
+                          <img src={spaceGIF} width={10} height={1} />
+                          <input
+                            type="checkbox"
+                            checked={filterState.subCategories?.includes(
+                              subCategory
+                            )}
+                            onInput={(e) => {
+                              if (e.currentTarget.checked) {
+                                setFilterState((f) => ({
+                                  ...f,
+                                  subCategories: f.subCategories?.filter(
+                                    (x) => subCategory !== x
+                                  ),
+                                }));
+                              } else {
+                                setFilterState((f) => ({
+                                  ...f,
+                                  subCategories:
+                                    filterState.subCategories?.concat(
+                                      subCategory
+                                    ),
+                                }));
+                              }
+                            }}
+                          ></input>
+                          {subCategory}
+                        </div>
+                      )
+                    )}
+                </>
               ))}
             </div>
           )}
