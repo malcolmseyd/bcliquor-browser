@@ -13,7 +13,7 @@
   },
   "scripts": {
     "start": "bun dev",
-    "build": "rm -r dist/ && parcel build public/index.html",
+    "build": "rm -r dist/ && parcel build --no-source-maps public/index.html",
     "generate": "cd src/ && bun run script.js && quicktype -l typescript categories.json --just-types > categories.d.ts && quicktype -l typescript data.json --just-types > data.d.ts"
   },
   "devDependencies": {
