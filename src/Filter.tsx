@@ -8,6 +8,7 @@ type FilterState = {
   categories: string[];
   subCategories: string[];
   price: { min?: number; max?: number };
+  items: { min?: number; max?: number };
   volume: { min?: number; max?: number };
   percent: { min?: number; max?: number };
   stock: { min?: number; max?: number };
@@ -17,6 +18,7 @@ type FilterState = {
 type FilterUIState = {
   categories?: boolean;
   price?: boolean;
+  items?: boolean;
   volume?: boolean;
   percent?: boolean;
   stock?: boolean;
@@ -33,6 +35,7 @@ export function Filter({ setFilter, categories, data }: FilterConfigProps) {
     categories: Object.keys(categories),
     subCategories: Object.values(categories).flat(),
     price: {},
+    items: {},
     volume: {},
     percent: {},
     stock: { min: 1 },
@@ -41,7 +44,7 @@ export function Filter({ setFilter, categories, data }: FilterConfigProps) {
 
   // every time filterState updates, recompute a new filter function
   useEffect(() => {
-    const { categories, subCategories, price, volume, percent, stock } =
+    const { categories, subCategories, price, items, volume, percent, stock } =
       filterState;
     setFilter(
       () => (x: Data) =>
@@ -52,6 +55,9 @@ export function Filter({ setFilter, categories, data }: FilterConfigProps) {
           // price
           (price?.max !== undefined && price?.max < x.price) ||
           (price?.min !== undefined && price?.min > x.price) ||
+          // items
+          (items?.max !== undefined && items?.max < x.items) ||
+          (items?.min !== undefined && items?.min > x.items) ||
           // volume
           (volume?.max !== undefined && volume?.max < x.volume) ||
           (volume?.min !== undefined && volume?.min > x.volume) ||
@@ -79,6 +85,7 @@ export function Filter({ setFilter, categories, data }: FilterConfigProps) {
               [
                 ["Category", "categories"],
                 ["Price", "price"],
+                ["Items", "items"],
                 ["Volume", "volume"],
                 ["Percent", "percent"],
                 ["Stock", "stock"],
@@ -98,6 +105,8 @@ export function Filter({ setFilter, categories, data }: FilterConfigProps) {
             />
           ) : filterUI.price ? (
             <FilterPrice {...{ filterState, setFilterState, data }} />
+          ) : filterUI.items? (
+            <FilterItems{...{ filterState, setFilterState, data }} />
           ) : filterUI.volume ? (
             <FilterVolume {...{ filterState, setFilterState, data }} />
           ) : filterUI.percent ? (
@@ -196,6 +205,18 @@ function FilterPrice(props: FilterPriceProps) {
   })(props);
 }
 
+type FilterItemProps = SubFilterProps & { data: Data[] };
+
+function FilterItems(props: FilterItemProps) {
+  const { data } = props;
+  return NumberFilter({
+    min: 0,
+    max: data.reduce((acc, curr) => Math.max(curr.items, acc), 0),
+    key: "items",
+    format: (x) => x.toString(),
+  })(props);
+}
+
 type FilterVolumeProps = SubFilterProps & { data: Data[] };
 
 function FilterVolume(props: FilterVolumeProps) {
@@ -240,12 +261,7 @@ type NumberFilterParams = {
   format: (x: number) => string;
 };
 
-function NumberFilter({
-  min,
-  max,
-  key,
-  format,
-}: NumberFilterParams) {
+function NumberFilter({ min, max, key, format }: NumberFilterParams) {
   return ({ filterState, setFilterState }: SubFilterProps) => {
     const value = filterState[key] as { min?: number; max?: number };
     return (
