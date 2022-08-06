@@ -10,6 +10,7 @@ type FilterState = {
   price: { min?: number; max?: number };
   volume: { min?: number; max?: number };
   percent: { min?: number; max?: number };
+  stock: { min?: number; max?: number };
 };
 
 // despite the type, only one field can be true at once
@@ -18,6 +19,7 @@ type FilterUIState = null | {
   price?: boolean;
   volume?: boolean;
   percent?: boolean;
+  stock?: boolean;
 };
 
 type FilterConfigProps = {
@@ -33,37 +35,65 @@ export function Filter({ setFilter, categories, data }: FilterConfigProps) {
     price: {},
     volume: {},
     percent: {},
+    stock: { min: 1 },
   });
   const [filterUI, setFilterUI] = useState<FilterUIState>(null);
 
   // every time filterState updates, recompute a new filter function
   useEffect(() => {
     setFilter(() => (x: Data) => {
-      if (x.stock === 0) {
-        return false;
-      }
       if (!filterState.categories?.includes(x.category)) {
         return false;
       }
       if (!filterState.subCategories?.includes(x.subCategory)) {
         return false;
       }
-      if (filterState.price?.max && filterState.price?.max < x.price) {
+      if (
+        filterState.price?.max !== undefined &&
+        filterState.price?.max < x.price
+      ) {
         return false;
       }
-      if (filterState.price?.min && filterState.price?.min > x.price) {
+      if (
+        filterState.price?.min !== undefined &&
+        filterState.price?.min > x.price
+      ) {
         return false;
       }
-      if (filterState.volume?.max && filterState.volume?.max < x.volume) {
+      if (
+        filterState.volume?.max !== undefined &&
+        filterState.volume?.max < x.volume
+      ) {
         return false;
       }
-      if (filterState.volume?.min && filterState.volume?.min > x.volume) {
+      if (
+        filterState.volume?.min !== undefined &&
+        filterState.volume?.min > x.volume
+      ) {
         return false;
       }
-      if (filterState.percent?.max && filterState.percent?.max < x.percent) {
+      if (
+        filterState.percent?.max !== undefined &&
+        filterState.percent?.max < x.percent
+      ) {
         return false;
       }
-      if (filterState.percent?.min && filterState.percent?.min > x.percent) {
+      if (
+        filterState.percent?.min !== undefined &&
+        filterState.percent?.min > x.percent
+      ) {
+        return false;
+      }
+      if (
+        filterState.stock?.max !== undefined &&
+        filterState.stock?.max < x.stock
+      ) {
+        return false;
+      }
+      if (
+        filterState.stock?.min !== undefined &&
+        filterState.stock?.min > x.stock
+      ) {
         return false;
       }
 
@@ -95,6 +125,9 @@ export function Filter({ setFilter, categories, data }: FilterConfigProps) {
             <button onClick={() => setFilterUI({ percent: !filterUI.percent })}>
               Percent
             </button>
+            <button onClick={() => setFilterUI({ stock: !filterUI.stock })}>
+              Stock
+            </button>
           </div>
           {filterUI.categories ? (
             <FilterCategories
@@ -106,6 +139,8 @@ export function Filter({ setFilter, categories, data }: FilterConfigProps) {
             <FilterVolume {...{ filterState, setFilterState, data }} />
           ) : filterUI.percent ? (
             <FilterPercent {...{ filterState, setFilterState, data }} />
+          ) : filterUI.stock ? (
+            <FilterStock {...{ filterState, setFilterState, data }} />
           ) : null}
         </>
       )}
@@ -335,6 +370,56 @@ function FilterPercent({ filterState, setFilterState }: FilterPercentProps) {
           }}
         ></input>
         / {maxPercent}%
+      </div>
+    </>
+  );
+}
+
+type FilterStockProps = SubFilterProps & { data: Data[] };
+
+function FilterStock({ filterState, setFilterState, data }: FilterStockProps) {
+  const minStock = 0;
+  const maxStock = data.reduce((acc, curr) => Math.max(curr.stock, acc), 0);
+
+  return (
+    <>
+      <div>
+        Minimum:
+        <input
+          type="number"
+          value={filterState.stock.min ?? 1}
+          min={minStock}
+          max={maxStock}
+          onChange={(e) => {
+            setFilterState((f) => ({
+              ...f,
+              stock: {
+                ...f.stock,
+                min: _.clamp(e.target.valueAsNumber, minStock, maxStock),
+              },
+            }));
+          }}
+        ></input>
+        / {maxStock}
+      </div>
+      <div>
+        Maximum:
+        <input
+          type="number"
+          value={filterState.stock.max ?? maxStock}
+          min={minStock}
+          max={maxStock}
+          onChange={(e) => {
+            setFilterState((f) => ({
+              ...f,
+              stock: {
+                ...f.stock,
+                max: _.clamp(e.target.valueAsNumber, minStock, maxStock),
+              },
+            }));
+          }}
+        ></input>
+        / {maxStock}
       </div>
     </>
   );
