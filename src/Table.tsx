@@ -8,6 +8,9 @@ function Table({
 }: {
   data: Data[];
 }) {
+  if (data.length === 0) {
+    return <h2>No results found <code>¯\_(ツ)_/¯</code></h2>
+  }
   return (
     <table>
       <thead>
