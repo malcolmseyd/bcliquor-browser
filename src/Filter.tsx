@@ -8,10 +8,15 @@ type FilterState = {
   categories: string[];
   subCategories: string[];
   price: { min?: number; max?: number };
+  volume: { min?: number; max?: number };
 };
 
 // despite the type, only one field can be true at once
-type FilterUIState = null | { categories?: boolean; price?: boolean };
+type FilterUIState = null | {
+  categories?: boolean;
+  price?: boolean;
+  volume?: boolean;
+};
 
 type FilterConfigProps = {
   setFilter: React.Dispatch<React.SetStateAction<(data: Data) => boolean>>;
@@ -24,6 +29,7 @@ export function Filter({ setFilter, categories, data }: FilterConfigProps) {
     categories: Object.keys(categories),
     subCategories: Object.values(categories).flat(),
     price: {},
+    volume: {},
   });
   const [filterUI, setFilterUI] = useState<FilterUIState>(null);
 
@@ -43,6 +49,12 @@ export function Filter({ setFilter, categories, data }: FilterConfigProps) {
         return false;
       }
       if (filterState.price?.min && filterState.price?.min > x.price) {
+        return false;
+      }
+      if (filterState.volume?.max && filterState.volume?.max < x.volume) {
+        return false;
+      }
+      if (filterState.volume?.min && filterState.volume?.min > x.volume) {
         return false;
       }
 
@@ -68,6 +80,9 @@ export function Filter({ setFilter, categories, data }: FilterConfigProps) {
             <button onClick={() => setFilterUI({ price: !filterUI.price })}>
               Price
             </button>
+            <button onClick={() => setFilterUI({ volume: !filterUI.volume})}>
+              Volume
+            </button>
           </div>
           {filterUI.categories ? (
             <FilterCategories
@@ -75,6 +90,8 @@ export function Filter({ setFilter, categories, data }: FilterConfigProps) {
             />
           ) : filterUI.price ? (
             <FilterPrice {...{ filterState, setFilterState, data }} />
+          ) : filterUI.volume ? (
+            <FilterVolume {...{ filterState, setFilterState, data }} />
           ) : null}
         </>
       )}
@@ -202,6 +219,60 @@ function FilterPrice({ filterState, setFilterState, data }: FilterPriceProps) {
           }}
         ></input>
         / ${maxPrice}
+      </div>
+    </>
+  );
+}
+
+type FilterVolumeProps = SubFilterProps & { data: Data[] };
+
+function FilterVolume({
+  filterState,
+  setFilterState,
+  data,
+}: FilterVolumeProps) {
+  const minVolume = 0;
+  const maxVolume = data.reduce((acc, curr) => Math.max(curr.volume, acc), 0);
+
+  return (
+    <>
+      <div>
+        Minimum:
+        <input
+          type="number"
+          value={filterState.volume.min ?? 0}
+          min={minVolume}
+          max={maxVolume}
+          onChange={(e) => {
+            setFilterState((f) => ({
+              ...f,
+              volume: {
+                ...f.volume,
+                min: _.clamp(e.target.valueAsNumber, minVolume, maxVolume),
+              },
+            }));
+          }}
+        ></input>
+        / {maxVolume} L
+      </div>
+      <div>
+        Maximum:
+        <input
+          type="number"
+          value={filterState.volume.max ?? maxVolume}
+          min={minVolume}
+          max={maxVolume}
+          onChange={(e) => {
+            setFilterState((f) => ({
+              ...f,
+              volume: {
+                ...f.volume,
+                max: _.clamp(e.target.valueAsNumber, minVolume, maxVolume),
+              },
+            }));
+          }}
+        ></input>
+        / {maxVolume} L
       </div>
     </>
   );
