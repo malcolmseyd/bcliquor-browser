@@ -9,6 +9,7 @@ type FilterState = {
   subCategories: string[];
   price: { min?: number; max?: number };
   volume: { min?: number; max?: number };
+  percent: { min?: number; max?: number };
 };
 
 // despite the type, only one field can be true at once
@@ -16,6 +17,7 @@ type FilterUIState = null | {
   categories?: boolean;
   price?: boolean;
   volume?: boolean;
+  percent?: boolean;
 };
 
 type FilterConfigProps = {
@@ -30,6 +32,7 @@ export function Filter({ setFilter, categories, data }: FilterConfigProps) {
     subCategories: Object.values(categories).flat(),
     price: {},
     volume: {},
+    percent: {},
   });
   const [filterUI, setFilterUI] = useState<FilterUIState>(null);
 
@@ -57,6 +60,12 @@ export function Filter({ setFilter, categories, data }: FilterConfigProps) {
       if (filterState.volume?.min && filterState.volume?.min > x.volume) {
         return false;
       }
+      if (filterState.percent?.max && filterState.percent?.max < x.percent) {
+        return false;
+      }
+      if (filterState.percent?.min && filterState.percent?.min > x.percent) {
+        return false;
+      }
 
       return true;
     });
@@ -80,8 +89,11 @@ export function Filter({ setFilter, categories, data }: FilterConfigProps) {
             <button onClick={() => setFilterUI({ price: !filterUI.price })}>
               Price
             </button>
-            <button onClick={() => setFilterUI({ volume: !filterUI.volume})}>
+            <button onClick={() => setFilterUI({ volume: !filterUI.volume })}>
               Volume
+            </button>
+            <button onClick={() => setFilterUI({ percent: !filterUI.percent })}>
+              Percent
             </button>
           </div>
           {filterUI.categories ? (
@@ -92,6 +104,8 @@ export function Filter({ setFilter, categories, data }: FilterConfigProps) {
             <FilterPrice {...{ filterState, setFilterState, data }} />
           ) : filterUI.volume ? (
             <FilterVolume {...{ filterState, setFilterState, data }} />
+          ) : filterUI.percent ? (
+            <FilterPercent {...{ filterState, setFilterState, data }} />
           ) : null}
         </>
       )}
@@ -106,8 +120,6 @@ type SubFilterProps = {
 
 type FilterCategoriesProps = SubFilterProps & { categories: Categories };
 
-// TODO clicking category checkboxes don't hide subcategories, instead toggle
-// them all off
 function FilterCategories({
   categories,
   filterState,
@@ -273,6 +285,56 @@ function FilterVolume({
           }}
         ></input>
         / {maxVolume} L
+      </div>
+    </>
+  );
+}
+
+type FilterPercentProps = SubFilterProps;
+
+function FilterPercent({ filterState, setFilterState }: FilterPercentProps) {
+  const minPercent = 0;
+  const maxPercent = 100;
+
+  return (
+    <>
+      <div>
+        Minimum:
+        <input
+          type="number"
+          value={filterState.percent.min ?? 0}
+          min={minPercent}
+          max={maxPercent}
+          onChange={(e) => {
+            setFilterState((f) => ({
+              ...f,
+              percent: {
+                ...f.percent,
+                min: _.clamp(e.target.valueAsNumber, minPercent, maxPercent),
+              },
+            }));
+          }}
+        ></input>
+        / {maxPercent}%
+      </div>
+      <div>
+        Maximum:
+        <input
+          type="number"
+          value={filterState.percent.max ?? maxPercent}
+          min={minPercent}
+          max={maxPercent}
+          onChange={(e) => {
+            setFilterState((f) => ({
+              ...f,
+              percent: {
+                ...f.percent,
+                max: _.clamp(e.target.valueAsNumber, minPercent, maxPercent),
+              },
+            }));
+          }}
+        ></input>
+        / {maxPercent}%
       </div>
     </>
   );
