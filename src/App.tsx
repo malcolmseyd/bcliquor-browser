@@ -29,7 +29,7 @@ function App() {
       <header>
         <h1>BC Liquor Store browser</h1>
       </header>
-      <Filter {...{ filter, setFilter, categories }} />
+      <Filter {...{ filter, setFilter, categories, data }} />
       <hr />
       <Pagination {...{ page, setPage, limit, setLimit, data: filteredData }} />
       <hr />
