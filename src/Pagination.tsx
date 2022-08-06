@@ -1,4 +1,5 @@
 import React from "react";
+import _ from "lodash";
 
 type PaginationProps = {
   page: number;
@@ -38,12 +39,14 @@ export function Pagination({ page, setPage, limit, setLimit, data }: PaginationP
           type="number"
           value={limit}
           onChange={(e) =>
-            setLimit(Math.min(Math.max(e.target.valueAsNumber, 0), data.length))
+            setLimit(_.clamp(e.target.valueAsNumber, 0, data.length))
           }
           min={1}
           max={data.length}
         ></input>
         / {data.length}
+      </div>
+      <div>
         {data.length >= 100 && (
           <button onClick={() => setLimit(100)}>100</button>
         )}
