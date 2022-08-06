@@ -13,6 +13,7 @@ const data = JSON.parse(rawDataText).hits.hits
 		name: x._source.name,
 		stock: x._source.availableUnits,
 		price: Number.parseFloat(x._source.regularPrice),
+		items: x._source.unitSize,
 		volume: Number.parseFloat(x._source.volume),
 		percent: x._source.alcoholPercentage,
 		category: x._source.category.description,
@@ -20,7 +21,7 @@ const data = JSON.parse(rawDataText).hits.hits
 	}))
 	.map((x) => ({
 		...x,
-		millsPerDollar: (x.volume * 1000 * (x.percent / 100)) / x.price,
+		millsPerDollar: (x.volume * 1000 * x.items * (x.percent / 100)) / x.price,
 	}))
 	.sort((a, b) => b.millsPerDollar - a.millsPerDollar);
 

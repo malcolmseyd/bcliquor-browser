@@ -1,7 +1,7 @@
 export interface Categories {
+    Beer:                  string[];
     Wine:                  string[];
     Spirits:               string[];
-    Beer:                  string[];
     "Coolers & Ciders":    string[];
     "General Merchandise": string[];
 }

@@ -13,13 +13,15 @@
   },
   "scripts": {
     "start": "bun dev",
-    "build": "rm -r dist/ && parcel build public/index.html"
+    "build": "rm -r dist/ && parcel build public/index.html",
+    "generate": "cd src/ && bun run script.js && quicktype -l typescript categories.json --just-types > categories.d.ts && quicktype -l typescript data.json --just-types > data.d.ts"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.182",
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
     "parcel": "^2.7.0",
+    "quicktype": "^15.0.261",
     "react-refresh": "0.10.0",
     "typescript": "latest"
   }
