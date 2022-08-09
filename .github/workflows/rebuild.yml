@@ -1,9 +1,11 @@
-name: Build the website from scraped data
+name: Rebuild with fresh data
 
 on:
-  push:
-    branches:
-      - 'scrape'
+  repository_dispatch:
+  workflow_dispatch:
+  schedule:
+    # every day at 4am
+    - cron: 0 4 * * *
 
 jobs:
   run:
@@ -19,16 +21,20 @@ jobs:
       - name: Setup Bun Runtime
         uses: antongolub/action-setup-bun@v1
 
-      - name: Build the static files
-        run: |
-          bun install
-          bun run build
+      - name: Install dependencies
+        run: bun install
+
+      - name: Generate the JSON files and the site
+        run: bun run generate
+
+      - name: Build the website
+        run: bun run build
 
       - name: Push changes to "build" branch
         run: |
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
-          git checkout -b build
+          git checkout -b build 
           git add .
           git commit -m "built at $(date +"%Y.%m.%d")"
           git push -f origin build
