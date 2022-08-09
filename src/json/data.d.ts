@@ -1,14 +1,14 @@
 export interface Data {
-    id:             string;
-    name:           string;
-    stock:          number;
-    price:          number;
-    items:          number;
-    volume:         number;
-    percent:        number;
     category:       Category;
-    subCategory:    SubCategory;
+    id:             string;
+    items:          number;
     millsPerDollar: number;
+    name:           string;
+    percent:        number;
+    price:          number;
+    stock:          number;
+    subCategory:    SubCategory;
+    volume:         number;
 }
 
 export enum Category {

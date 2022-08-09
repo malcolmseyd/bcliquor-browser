@@ -14,7 +14,7 @@
   "scripts": {
     "start": "bun dev",
     "build": "rm -rf dist/ && parcel build --no-source-maps public/index.html",
-    "generate": "cd src/json/ && bun run ../../scripts/scrape.js && quicktype -l typescript categories.json --just-types > categories.d.ts && quicktype -l typescript data.json --just-types > data.d.ts && quicktype -l typescript metadata.json --just-types > metadata.d.ts"
+    "generate": "cd src/json/ && bun run ../../scripts/scrape.js && quicktype -l typescript categories.json --just-types --alphabetize-properties > categories.d.ts && quicktype -l typescript data.json --just-types --alphabetize-properties > data.d.ts && quicktype -l typescript metadata.json --just-types --alphabetize-properties > metadata.d.ts"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.182",
