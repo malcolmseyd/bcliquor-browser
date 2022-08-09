@@ -49,7 +49,7 @@ export function Table({ data }: TableProps) {
             <tr key={id}>
               <td>{rank}</td>
               <td>
-                <a href={productURL + id}>{name}</a>
+                <a href={productURL + id} target="_blank">{name}</a>
               </td>
               <td>${price}</td>
               <td>{items}</td>
