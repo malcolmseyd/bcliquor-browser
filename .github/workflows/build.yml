@@ -1,10 +1,9 @@
-name: Web scrape and regenerate the data sources
+name: Build the website from scraped data
 
 on:
-  repository_dispatch:
-  workflow_dispatch:
-  schedule:
-    - cron: 0 4 * * *
+  push:
+    branches:
+      - 'scrape'
 
 jobs:
   run:
@@ -20,17 +19,17 @@ jobs:
       - name: Setup Bun Runtime
         uses: antongolub/action-setup-bun@v1
 
-      - name: Scrape the BC Liquor store and generate the JSON files
+      - name: Build the static files
         run: |
           bun install
-          bun run generate
+          bun run build
 
-      - name: Push changes to "scrape" branch
+      - name: Push changes to "build" branch
         run: |
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
-          git checkout -b scrape
+          git checkout -b build
           git add .
-          git commit -m "scraped at $(date +"%Y.%m.%d")"
-          git push -f origin scrape
+          git commit -m "built at $(date +"%Y.%m.%d")"
+          git push -f origin build
 
