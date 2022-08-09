@@ -13,7 +13,7 @@ const data = json.hits.hits
 		id: x._id,
 		name: x._source.name,
 		stock: x._source.availableUnits,
-		price: Number.parseFloat(x._source.regularPrice),
+		price: Number.parseFloat(x._source.currentPrice),
 		items: x._source.unitSize,
 		volume: Number.parseFloat(x._source.volume),
 		percent: x._source.alcoholPercentage,
