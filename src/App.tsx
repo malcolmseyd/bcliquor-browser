@@ -1,7 +1,7 @@
-import _data from "./data.json";
-import { Data } from "./data";
-import _categories from "./categories.json";
-import { Categories } from "./categories";
+import _data from "./json/data.json";
+import { Data } from "./json/data";
+import _categories from "./json/categories.json";
+import { Categories } from "./json/categories";
 import { useState } from "react";
 import _ from "lodash";
 

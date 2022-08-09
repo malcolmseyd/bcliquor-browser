@@ -1,7 +1,7 @@
-import _, { clamp } from "lodash";
+import _ from "lodash";
 import React, { useEffect, useState } from "react";
-import { Categories } from "./categories";
-import { Data } from "./data";
+import { Categories } from "./json/categories";
+import { Data } from "./json/data";
 import spaceGIF from "./s.gif";
 
 type FilterState = {
