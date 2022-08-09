@@ -30,6 +30,9 @@ jobs:
       - name: Build the website
         run: bun run build
 
+      - name: Remove dist/ from .gitignore
+        run: sed -i '/^dist\/$/d' .gitignore
+
       - name: Push changes to "build" branch
         run: |
           git config user.name "${{ github.actor }}"
