@@ -7,7 +7,7 @@ type TableProps = {
 };
 
 // the Table renders the data in a nice tabluar format
-function Table({ data }: TableProps) {
+export function Table({ data }: TableProps) {
   if (data.length === 0) {
     return (
       <h2>
@@ -66,5 +66,3 @@ function Table({ data }: TableProps) {
     </table>
   );
 }
-
-export { Table };

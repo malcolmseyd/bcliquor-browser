@@ -1,8 +1,9 @@
-import _ from "lodash";
-import React, { useEffect, useState } from "react";
 import { Categories } from "./json/categories";
 import { Data } from "./json/data";
 import spaceGIF from "./assets/s.gif";
+
+import React, { useEffect, useState } from "react";
+import _ from "lodash";
 
 type FilterState = {
   categories: string[];
@@ -105,8 +106,8 @@ export function Filter({ setFilter, categories, data }: FilterConfigProps) {
             />
           ) : filterUI.price ? (
             <FilterPrice {...{ filterState, setFilterState, data }} />
-          ) : filterUI.items? (
-            <FilterItems{...{ filterState, setFilterState, data }} />
+          ) : filterUI.items ? (
+            <FilterItems {...{ filterState, setFilterState, data }} />
           ) : filterUI.volume ? (
             <FilterVolume {...{ filterState, setFilterState, data }} />
           ) : filterUI.percent ? (
@@ -255,8 +256,6 @@ function FilterStock(props: FilterStockProps) {
 type NumberFilterParams = {
   min: number;
   max: number;
-  defaultMin?: number;
-  defaultMax?: number;
   key: keyof FilterUIState;
   format: (x: number) => string;
 };

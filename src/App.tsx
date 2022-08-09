@@ -4,9 +4,10 @@ import _categories from "./json/categories.json";
 import { Categories } from "./json/categories";
 import _metadata from "./json/metadata.json";
 import { Metadata } from "./json/metadata";
+import "./App.css";
+
 import { useState } from "react";
 import _ from "lodash";
-import "./App.css"
 
 import { Table } from "./Table";
 import { Filter } from "./Filter";
