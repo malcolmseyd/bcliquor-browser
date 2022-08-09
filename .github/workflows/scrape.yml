@@ -20,6 +20,7 @@ jobs:
 
       - name: Scrape the BC Liquor store and generate the JSON files
         run: |
+          bun install
           bun run generate
 
       - name: Push changes to "scrape" branch
