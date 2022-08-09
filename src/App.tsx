@@ -2,6 +2,8 @@ import _data from "./json/data.json";
 import { Data } from "./json/data";
 import _categories from "./json/categories.json";
 import { Categories } from "./json/categories";
+import _metadata from "./json/metadata.json";
+import { Metadata } from "./json/metadata";
 import { useState } from "react";
 import _ from "lodash";
 
@@ -11,6 +13,10 @@ import { Pagination } from "./Pagination";
 
 const data = _data as Data[];
 const categories = _categories as Categories;
+const metadata = {
+  ..._metadata,
+  scrapedAt: new Date(_metadata.scrapedAt),
+} as Metadata;
 
 function App() {
   const [filter, setFilter] = useState<(data: Data) => boolean>(
@@ -28,6 +34,9 @@ function App() {
     <div>
       <header>
         <h1>BC Liquor Store browser</h1>
+        <p>
+          This data was last updated at {metadata.scrapedAt.toLocaleString()}
+        </p>
       </header>
       <Filter {...{ filter, setFilter, categories, data }} />
       <hr />

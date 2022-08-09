@@ -35,8 +35,13 @@ const categories = _(data)
 			.uniq()
 	);
 
+const metadata = {
+	scrapedAt: new Date().toISOString(),
+}
+
 console.log("writing files")
 fs.writeFileSync("data.json", JSON.stringify(data));
 fs.writeFileSync("categories.json", JSON.stringify(categories));
+fs.writeFileSync("metadata.json", JSON.stringify(metadata));
 
 console.log("done")
