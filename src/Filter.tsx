@@ -2,7 +2,7 @@ import _ from "lodash";
 import React, { useEffect, useState } from "react";
 import { Categories } from "./json/categories";
 import { Data } from "./json/data";
-import spaceGIF from "./s.gif";
+import spaceGIF from "./assets/s.gif";
 
 type FilterState = {
   categories: string[];
