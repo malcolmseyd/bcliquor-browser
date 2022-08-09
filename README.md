@@ -1,24 +1,37 @@
-# React with Bun runtime
+# BCLiquor Browser
 
-This is a React project bootstrapped with [bun](https://bun.sh/).
+Live website here: https://bcliquor.pages.dev
 
-## Getting Started
+This is a website for viewing BC Liquor's entire catalog as a table, sorted by mL of alcohol per dollar. The table has various filters for narrowing down what you're looking for. Data is updated once per day.
 
-### Cloning the repo
+This project has cost me $0, since I host it for free on Cloudflare Pages and new data is fetched using GitHub actions. Even on a private repo, my free minutes per month are more than enough.
 
-```sh
-bun create react ./react-bun-app
+## Development
+
+First, install the required packages:
+
+```console
+$ bun install
 ```
 
-### Development
+Then, get some test data and run the development server
 
-First, run the development server.
-
-```
-bun dev
+```console
+$ bun run generate
+$ bun run start
 ```
 
 Open http://localhost:3000 with your browser to see the result.
 
-You can start editing the page by modifying src/App.jsx. The page auto-updates as you edit the file.
+## Building and Deploying
 
+This repo uses parcel to build. The following commands with update the data and build the page:
+
+```console
+$ bun run generate
+$ bun run build
+```
+
+You can then serve the files from the `dist/` folder.
+
+This repo uses a GitHub action to rebuild the repo every day, where the build files are output to the `build` branch. Cloudflare Pages then deploys any new commits to the `build` branch immediately. This keeps the data fresh, as anyone using the site will have data from within the last 24 hours.

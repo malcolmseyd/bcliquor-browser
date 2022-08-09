@@ -1,4 +1,4 @@
-import { Data } from "./data";
+import { Data } from "./json/data";
 
 const productURL = "https://www.bcliquorstores.com/product/";
 

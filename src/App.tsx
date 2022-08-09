@@ -6,10 +6,12 @@ import _metadata from "./json/metadata.json";
 import { Metadata } from "./json/metadata";
 import { useState } from "react";
 import _ from "lodash";
+import "./App.css"
 
 import { Table } from "./Table";
 import { Filter } from "./Filter";
 import { Pagination } from "./Pagination";
+import { Info } from "./Info";
 
 const data = _data as Data[];
 const categories = _categories as Categories;
@@ -37,7 +39,9 @@ function App() {
         <p>
           This data was last updated at {metadata.scrapedAt.toLocaleString()}
         </p>
+        <Info />
       </header>
+      <hr />
       <Filter {...{ filter, setFilter, categories, data }} />
       <hr />
       <Pagination {...{ page, setPage, limit, setLimit, data: filteredData }} />
