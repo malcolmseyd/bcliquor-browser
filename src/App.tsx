@@ -13,6 +13,8 @@ import { SortState, Table } from "./Table";
 import { Filter } from "./Filter";
 import { Pagination } from "./Pagination";
 import { Info } from "./Info";
+import { Search } from "./Search";
+import Fuse from "fuse.js";
 
 const data = _data as Data[];
 const categories = _categories as Categories;
@@ -32,6 +34,7 @@ function App() {
     column: "millsPerDollar",
     descending: true,
   });
+  const [search, setSearch] = useState<string>("");
 
   const sortedData = useMemo<Data[]>(() => {
     const sorted = _.sortBy(data, sortState.column);
@@ -41,10 +44,16 @@ function App() {
     return sorted;
   }, [sortState]);
 
-  const filteredData = useMemo<(Data & { rank: number })[]>(
-    () => sortedData.filter(filter).map((x, i) => ({ ...x, rank: i + 1 })),
-    [sortedData, filter]
-  );
+  const filteredData = useMemo<(Data & { rank: number })[]>(() => {
+    const filtered = sortedData
+      .filter(filter)
+      .map((x, i) => ({ ...x, rank: i + 1 }));
+    if (search === "") {
+      return filtered;
+    }
+    const fuse = new Fuse(filtered, { keys: ["name"] });
+    return fuse.search(search).map((x) => x.item);
+  }, [sortedData, filter, search]);
 
   return (
     <div>
@@ -59,6 +68,8 @@ function App() {
       <Filter {...{ filter, setFilter, categories, data }} />
       <hr />
       <Pagination {...{ page, setPage, limit, setLimit, data: filteredData }} />
+      <hr />
+      <Search {...{ search, setSearch }} />
       <hr />
       <Table
         {...{
