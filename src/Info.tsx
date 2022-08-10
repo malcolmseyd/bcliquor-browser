@@ -25,6 +25,7 @@ export function Info() {
             (like Ctrl+F), try setting the page size to "all" to see all items
             on one page.
           </p>
+          <p>The buttons on each column control the sort order for the table.</p>
           <p>
             You can find the source code for this project at{" "}
             <a href="https://github.com/malcolmseyd/bcliquor-browser">

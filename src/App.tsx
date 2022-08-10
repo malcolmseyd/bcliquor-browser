@@ -6,10 +6,10 @@ import _metadata from "./json/metadata.json";
 import { Metadata } from "./json/metadata";
 import "./App.css";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import _ from "lodash";
 
-import { Table } from "./Table";
+import { SortState, Table } from "./Table";
 import { Filter } from "./Filter";
 import { Pagination } from "./Pagination";
 import { Info } from "./Info";
@@ -28,10 +28,23 @@ function App() {
 
   const [page, setPage] = useState(0);
   const [limit, setLimit] = useState(Math.min(data.length, 1000));
+  const [sortState, setSortState] = useState<SortState>({
+    column: "millsPerDollar",
+    descending: true,
+  });
 
-  const filteredData = data
-    .filter(filter)
-    .map((x, i) => ({ ...x, rank: i + 1 }));
+  const sortedData = useMemo<Data[]>(() => {
+    const sorted = _.sortBy(data, sortState.column);
+    if (sortState.descending) {
+      return sorted.reverse();
+    }
+    return sorted;
+  }, [sortState]);
+
+  const filteredData = useMemo<(Data & { rank: number })[]>(
+    () => sortedData.filter(filter).map((x, i) => ({ ...x, rank: i + 1 })),
+    [sortedData, filter]
+  );
 
   return (
     <div>
@@ -47,7 +60,13 @@ function App() {
       <hr />
       <Pagination {...{ page, setPage, limit, setLimit, data: filteredData }} />
       <hr />
-      <Table data={filteredData.slice(page * limit, (page + 1) * limit)} />
+      <Table
+        {...{
+          data: filteredData.slice(page * limit, (page + 1) * limit),
+          sortState,
+          setSortState,
+        }}
+      />
     </div>
   );
 }
