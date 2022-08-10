@@ -135,6 +135,28 @@ function FilterCategories({
 }: FilterCategoriesProps) {
   return (
     <>
+      <button
+        onClick={() =>
+          setFilterState((f) => ({
+            ...f,
+            categories: Object.keys(categories),
+            subCategories: Object.values(categories).flat(),
+          }))
+        }
+      >
+        Select all
+      </button>
+      <button
+        onClick={() =>
+          setFilterState((f) => ({
+            ...f,
+            categories: [],
+            subCategories: [],
+          }))
+        }
+      >
+        De-select all
+      </button>
       {Object.keys(categories).map((category) => (
         <React.Fragment key={category}>
           <div>
