@@ -36,24 +36,26 @@ function App() {
   });
   const [search, setSearch] = useState<string>("");
 
+  const searchedData = useMemo<Data[]>(() => {
+    if (search === "") {
+      return data;
+    }
+    const fuse = new Fuse(data, { keys: ["name"], threshold: 0.3 });
+    return fuse.search(search).map((x) => x.item);
+  }, [search]);
+
   const sortedData = useMemo<Data[]>(() => {
-    const sorted = _.sortBy(data, sortState.column);
+    const sorted = _.sortBy(searchedData, sortState.column);
     if (sortState.descending) {
       return sorted.reverse();
     }
     return sorted;
-  }, [sortState]);
+  }, [sortState, searchedData]);
 
-  const filteredData = useMemo<(Data & { rank: number })[]>(() => {
-    const filtered = sortedData
-      .filter(filter)
-      .map((x, i) => ({ ...x, rank: i + 1 }));
-    if (search === "") {
-      return filtered;
-    }
-    const fuse = new Fuse(filtered, { keys: ["name"] });
-    return fuse.search(search).map((x) => x.item);
-  }, [sortedData, filter, search]);
+  const filteredData = useMemo<(Data & { rank: number })[]>(
+    () => sortedData.filter(filter).map((x, i) => ({ ...x, rank: i + 1 })),
+    [sortedData, filter]
+  );
 
   return (
     <div>
