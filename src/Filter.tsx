@@ -6,8 +6,7 @@ import React, { useEffect, useState } from "react";
 import _ from "lodash";
 
 type FilterState = {
-  categories: string[];
-  subCategories: string[];
+  categories: Partial<Categories>;
   price: { min?: number; max?: number };
   items: { min?: number; max?: number };
   volume: { min?: number; max?: number };
@@ -33,8 +32,7 @@ type FilterConfigProps = {
 
 export function Filter({ setFilter, categories, data }: FilterConfigProps) {
   const [filterState, setFilterState] = useState<FilterState>({
-    categories: Object.keys(categories),
-    subCategories: Object.values(categories).flat(),
+    categories,
     price: {},
     items: {},
     volume: {},
@@ -45,14 +43,18 @@ export function Filter({ setFilter, categories, data }: FilterConfigProps) {
 
   // every time filterState updates, recompute a new filter function
   useEffect(() => {
-    const { categories, subCategories, price, items, volume, percent, stock } =
-      filterState;
+    const { categories, price, items, volume, percent, stock } = filterState;
+    const categoryKeys = Object.keys(categories);
+
     setFilter(
+      // THIS FUNCTION IS VERY PERFORMANCE SENSITIVE, IT RUNS O(n) ON THE TABLE
       () => (x: Data) =>
         // if any of these expressions evaluate to true, reject the element
         !(
-          !categories?.includes(x.category) ||
-          !subCategories?.includes(x.subCategory) ||
+          !(
+            categoryKeys.includes(x.category) &&
+            categories[x.category]?.includes(x.subCategory)
+          ) ||
           // price
           (price?.max !== undefined && price?.max < x.price) ||
           (price?.min !== undefined && price?.min > x.price) ||
@@ -133,14 +135,17 @@ function FilterCategories({
   filterState,
   setFilterState,
 }: FilterCategoriesProps) {
+  const categoryKeys = Object.keys(categories) as (keyof Categories)[];
+  // const  = (c: Categories): Categories => _(c).toPairs().map(([k,v]) => [k,v]).fromPairs() as any,
   return (
     <>
       <button
         onClick={() =>
           setFilterState((f) => ({
             ...f,
-            categories: Object.keys(categories),
-            subCategories: Object.values(categories).flat(),
+            categories: _.mapValues(f.categories, (v, k) =>
+              v === undefined ? undefined : categories[k as keyof Categories]
+            ),
           }))
         }
       >
@@ -150,61 +155,59 @@ function FilterCategories({
         onClick={() =>
           setFilterState((f) => ({
             ...f,
-            categories: [],
-            subCategories: [],
+            categories: _.mapValues(f.categories, (v) =>
+              v === undefined ? undefined : []
+            ),
           }))
         }
       >
         De-select all
       </button>
-      {Object.keys(categories).map((category) => (
+      {categoryKeys.map((category) => (
         <React.Fragment key={category}>
           <div>
             <input
               type="checkbox"
-              checked={filterState.categories?.includes(category)}
+              checked={filterState.categories[category] !== undefined}
               readOnly
               onInput={(e) => {
-                if (e.currentTarget.checked) {
-                  setFilterState((f) => ({
-                    ...f,
-                    categories: filterState.categories?.filter(
-                      (x) => category !== x
-                    ),
-                  }));
-                } else {
-                  setFilterState((f) => ({
-                    ...f,
-                    categories: filterState.categories?.concat(category),
-                  }));
-                }
+                const checked = e.currentTarget.checked;
+                setFilterState((f) => ({
+                  ...f,
+                  categories: {
+                    ...filterState.categories,
+                    [category]: checked ? undefined : categories[category],
+                  },
+                }));
               }}
             ></input>
             {category}
           </div>
-          {filterState.categories?.includes(category) &&
-            categories[category as keyof Categories].map((subCategory) => (
+          {filterState.categories[category] !== undefined &&
+            categories[category].map((subCategory) => (
               <div key={category + " " + subCategory}>
                 <img src={spaceGIF} width={10} height={1} />
                 <input
                   type="checkbox"
-                  checked={filterState.subCategories?.includes(subCategory)}
+                  checked={filterState.categories[category]?.includes(
+                    subCategory
+                  )}
                   readOnly
                   onInput={(e) => {
-                    if (e.currentTarget.checked) {
-                      setFilterState((f) => ({
-                        ...f,
-                        subCategories: f.subCategories?.filter(
-                          (x) => subCategory !== x
-                        ),
-                      }));
-                    } else {
-                      setFilterState((f) => ({
-                        ...f,
-                        subCategories:
-                          filterState.subCategories?.concat(subCategory),
-                      }));
-                    }
+                    const checked = e.currentTarget.checked;
+                    setFilterState((f) => ({
+                      ...f,
+                      categories: {
+                        ...f.categories,
+                        [category]: checked
+                          ? f.categories[category]?.filter(
+                              (x) => subCategory !== x
+                            )
+                          : filterState.categories[category]?.concat(
+                              subCategory
+                            ),
+                      },
+                    }));
                   }}
                 ></input>
                 {subCategory}
