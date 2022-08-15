@@ -22,7 +22,7 @@ export function Table({ data, sortState, setSortState }: TableProps) {
   if (data.length === 0) {
     return (
       <h2>
-        No results found <code>¯\_(ツ)_/¯</code>
+        No results found <span className="is-family-monospace">¯\_(ツ)_/¯</span>
       </h2>
     );
   }

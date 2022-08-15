@@ -4,17 +4,19 @@ import _categories from "./json/categories.json";
 import { Categories } from "./json/categories";
 import _metadata from "./json/metadata.json";
 import { Metadata } from "./json/metadata";
+
+import 'bulma/css/bulma.min.css';
 import "./App.css";
 
 import { useMemo, useState } from "react";
 import _ from "lodash";
+import Fuse from "fuse.js";
 
 import { SortState, Table } from "./Table";
 import { Filter } from "./Filter";
 import { Pagination } from "./Pagination";
 import { Info } from "./Info";
 import { Search } from "./Search";
-import Fuse from "fuse.js";
 
 const data = _data as Data[];
 const categories = _categories as Categories;

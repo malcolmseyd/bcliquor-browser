@@ -2,7 +2,3 @@
 .cryptedmail:after {
   content: attr(data-name) "@" attr(data-domain) "." attr(data-tld);
 }
-
-body {
-  padding: 5px
-}
