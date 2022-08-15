@@ -78,7 +78,7 @@ export function Filter({ setFilter, categories, data }: FilterConfigProps) {
     <div>
       <div>
         <button onClick={() => setFilterUI(filterUI === null ? {} : null)}>
-          Filter
+          Filters...
         </button>
       </div>
       {filterUI !== null && (
@@ -181,7 +181,7 @@ function FilterCategories({
                 }));
               }}
             ></input>
-            {category}
+            {" " + category}
           </div>
           {filterState.categories[category] !== undefined &&
             categories[category].map((subCategory) => (
@@ -210,7 +210,7 @@ function FilterCategories({
                     }));
                   }}
                 ></input>
-                {subCategory}
+                {" " + subCategory}
               </div>
             ))}
         </React.Fragment>

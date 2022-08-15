@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import { Data } from "./json/data";
+import sortSVG from "./assets/sort.svg";
+import upSVG from "./assets/up.svg";
+import downSVG from "./assets/down.svg";
 
 const productURL = "https://www.bcliquorstores.com/product/";
 
@@ -24,52 +27,61 @@ export function Table({ data, sortState, setSortState }: TableProps) {
     );
   }
 
-  const SortButton = ({ column }: { column: keyof Data }) =>
+  const SortButton = ({ column, text }: { column: keyof Data; text: string }) =>
     column !== sortState.column ? (
-      <button onClick={() => setSortState({ column, descending: true})}>
-        {"-"}
-      </button>
+      <span
+        className="icon-text is-clickable"
+        onClick={() => setSortState({ column, descending: true })}
+      >
+        <span>{text}</span>
+        <span className="icon">
+          <img src={sortSVG}></img>
+        </span>
+      </span>
     ) : (
-      <button
+      <span
+        className="icon-text is-clickable"
         onClick={() => {
           setSortState({ column, descending: !sortState.descending });
         }}
       >
-        {sortState.descending ? "▼" : "▲"}
-      </button>
+        <span>{text}</span>
+        <span className="icon">
+          <img src={sortState.descending ? downSVG : upSVG}></img>
+        </span>
+      </span>
     );
-
   return (
-    <table>
+    <table className="table">
       <thead>
         <tr>
           <th>Rank</th>
           <th>
-            Name <SortButton column="name" />
+            <SortButton text="Name" column="name" />
           </th>
           <th>
-            Price <SortButton column="price" />
+            <SortButton text="Price" column="price" />
           </th>
           <th>
-            Items <SortButton column="items" />
+            <SortButton text="Items" column="items" />
           </th>
           <th>
-            Volume <SortButton column="volume" />
+            <SortButton text="Volume" column="volume" />
           </th>
           <th>
-            Percent <SortButton column="percent" />
+            <SortButton text="Percent" column="percent" />
           </th>
           <th>
-            Category <SortButton column="category" />
+            <SortButton text="Category" column="category" />
           </th>
           <th>
-            Subcategory <SortButton column="subCategory" />
+            <SortButton text="Subcategory" column="subCategory" />
           </th>
           <th>
-            Stock <SortButton column="stock" />
+            <SortButton text="Stock" column="stock" />
           </th>
           <th>
-            Cost-Effectiveness <SortButton column="millsPerDollar" />
+            <SortButton text="Cost-Effectiveness" column="millsPerDollar" />
           </th>
         </tr>
       </thead>

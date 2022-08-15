@@ -60,7 +60,7 @@ function App() {
   return (
     <div>
       <header>
-        <h1>BC Liquor Store browser</h1>
+        <h1 className="title">BC Liquor Store Browser</h1>
         <p>
           This data was last updated at {metadata.scrapedAt.toLocaleString()}
         </p>
