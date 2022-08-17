@@ -1,6 +1,8 @@
 import { Categories } from "./json/categories";
 import { Data } from "./json/data";
 import spaceGIF from "./assets/s.gif";
+import closedSVG from "./assets/closed.svg";
+import openSVG from "./assets/open.svg";
 
 import React, { useEffect, useState } from "react";
 import _ from "lodash";
@@ -77,30 +79,45 @@ export function Filter({ setFilter, categories, data }: FilterConfigProps) {
   return (
     <div>
       <div>
-        <button onClick={() => setFilterUI(filterUI === null ? {} : null)}>
-          Filters...
+        <button
+          className="button"
+          onClick={() =>
+            setFilterUI(filterUI === null ? { categories: true } : null)
+          }
+        >
+          <span className="icon-text">
+            <span className="icon">
+              <img src={filterUI !== null ? openSVG : closedSVG}></img>
+            </span>
+            <span>Filters...</span>
+          </span>
         </button>
       </div>
       {filterUI !== null && (
         <>
-          <div>
-            {(
-              [
-                ["Category", "categories"],
-                ["Price", "price"],
-                ["Items", "items"],
-                ["Volume", "volume"],
-                ["Percent", "percent"],
-                ["Stock", "stock"],
-              ] as [string, keyof FilterUIState][]
-            ).map(([display, key]) => (
-              <button
-                key={key}
-                onClick={() => setFilterUI({ [key]: !filterUI[key] })}
-              >
-                {display}
-              </button>
-            ))}
+          <div className="tabs is-toggle is-fullwidth">
+            <ul>
+              {(
+                [
+                  ["Category", "categories"],
+                  ["Price", "price"],
+                  ["Items", "items"],
+                  ["Volume", "volume"],
+                  ["Percent", "percent"],
+                  ["Stock", "stock"],
+                ] as [string, keyof FilterUIState][]
+              ).map(([display, key]) => (
+                <li
+                  className={
+                    "is-clickable" + (filterUI[key] ? " is-active" : "")
+                  }
+                  key={key}
+                  onClick={() => setFilterUI({ [key]: true })}
+                >
+                  <a>{display}</a>
+                </li>
+              ))}
+            </ul>
           </div>
           {filterUI.categories ? (
             <FilterCategories
@@ -136,7 +153,6 @@ function FilterCategories({
   setFilterState,
 }: FilterCategoriesProps) {
   const categoryKeys = Object.keys(categories) as (keyof Categories)[];
-  // const  = (c: Categories): Categories => _(c).toPairs().map(([k,v]) => [k,v]).fromPairs() as any,
   return (
     <>
       <button
@@ -163,58 +179,66 @@ function FilterCategories({
       >
         De-select all
       </button>
-      {categoryKeys.map((category) => (
-        <React.Fragment key={category}>
-          <div>
-            <input
-              type="checkbox"
-              checked={filterState.categories[category] !== undefined}
-              readOnly
-              onInput={(e) => {
-                const checked = e.currentTarget.checked;
-                setFilterState((f) => ({
-                  ...f,
-                  categories: {
-                    ...filterState.categories,
-                    [category]: checked ? undefined : categories[category],
-                  },
-                }));
-              }}
-            ></input>
-            {" " + category}
-          </div>
-          {filterState.categories[category] !== undefined &&
-            categories[category].map((subCategory) => (
-              <div key={category + " " + subCategory}>
-                <img src={spaceGIF} width={10} height={1} />
+      <div className="columns">
+        {categoryKeys.map((category) => (
+          <div className="column" key={category}>
+            <div>
+              <label className="checkbox">
                 <input
                   type="checkbox"
-                  checked={filterState.categories[category]?.includes(
-                    subCategory
-                  )}
+                  checked={filterState.categories[category] !== undefined}
                   readOnly
                   onInput={(e) => {
                     const checked = e.currentTarget.checked;
                     setFilterState((f) => ({
                       ...f,
                       categories: {
-                        ...f.categories,
-                        [category]: checked
-                          ? f.categories[category]?.filter(
-                              (x) => subCategory !== x
-                            )
-                          : filterState.categories[category]?.concat(
-                              subCategory
-                            ),
+                        ...filterState.categories,
+                        [category]: checked ? undefined : categories[category],
                       },
                     }));
                   }}
                 ></input>
-                {" " + subCategory}
-              </div>
-            ))}
-        </React.Fragment>
-      ))}
+                {" " + category}
+              </label>
+            </div>
+            {filterState.categories[category] !== undefined &&
+              categories[category].map((subCategory) => (
+                <div
+                  key={category + " " + subCategory}
+                  style={{ marginLeft: 10 }}
+                >
+                  <label className="checkbox">
+                    <input
+                      type="checkbox"
+                      checked={filterState.categories[category]?.includes(
+                        subCategory
+                      )}
+                      readOnly
+                      onInput={(e) => {
+                        const checked = e.currentTarget.checked;
+                        setFilterState((f) => ({
+                          ...f,
+                          categories: {
+                            ...f.categories,
+                            [category]: checked
+                              ? f.categories[category]?.filter(
+                                  (x) => subCategory !== x
+                                )
+                              : filterState.categories[category]?.concat(
+                                  subCategory
+                                ),
+                          },
+                        }));
+                      }}
+                    ></input>
+                    {" " + subCategory}
+                  </label>
+                </div>
+              ))}
+          </div>
+        ))}
+      </div>
     </>
   );
 }

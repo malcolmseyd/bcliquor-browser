@@ -5,7 +5,7 @@ import { Categories } from "./json/categories";
 import _metadata from "./json/metadata.json";
 import { Metadata } from "./json/metadata";
 
-import 'bulma/css/bulma.min.css';
+import "bulma/css/bulma.min.css";
 import "./App.css";
 
 import { useMemo, useState } from "react";
@@ -62,11 +62,18 @@ function App() {
   return (
     <div>
       <header>
-        <h1 className="title">BC Liquor Store Browser</h1>
-        <p>
-          This data was last updated at {metadata.scrapedAt.toLocaleString()}
-        </p>
-        <Info />
+        <div className="block">
+          <h1 className="title">BC Liquor Store Browser</h1>
+          <p>
+            This data was last updated at{" "}
+            <a href="https://github.com/malcolmseyd/bcliquor-browser/actions/workflows/rebuild.yml">
+              {metadata.scrapedAt.toLocaleString()}
+            </a>
+          </p>
+        </div>
+        <div className="block">
+          <Info />
+        </div>
       </header>
       <hr />
       <Filter {...{ filter, setFilter, categories, data }} />

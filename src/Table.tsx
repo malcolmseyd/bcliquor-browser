@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React from "react";
 import { Data } from "./json/data";
 import sortSVG from "./assets/sort.svg";
 import upSVG from "./assets/up.svg";
@@ -40,7 +40,7 @@ export function Table({ data, sortState, setSortState }: TableProps) {
       </span>
     ) : (
       <span
-        className="icon-text is-clickable"
+        className="icon-text is-clickable has-text-info"
         onClick={() => {
           setSortState({ column, descending: !sortState.descending });
         }}
@@ -51,8 +51,9 @@ export function Table({ data, sortState, setSortState }: TableProps) {
         </span>
       </span>
     );
+
   return (
-    <table className="table">
+    <table className="table is-striped is-narrow is-fullwidth is-hoverable">
       <thead>
         <tr>
           <th>Rank</th>
