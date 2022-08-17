@@ -155,31 +155,33 @@ function FilterCategories({
   const categoryKeys = Object.keys(categories) as (keyof Categories)[];
   return (
     <>
-      <button
-        onClick={() =>
-          setFilterState((f) => ({
-            ...f,
-            categories: _.mapValues(f.categories, (v, k) =>
-              v === undefined ? undefined : categories[k as keyof Categories]
-            ),
-          }))
-        }
-      >
-        Select all
-      </button>
-      <button
-        onClick={() =>
-          setFilterState((f) => ({
-            ...f,
-            categories: _.mapValues(f.categories, (v) =>
-              v === undefined ? undefined : []
-            ),
-          }))
-        }
-      >
-        De-select all
-      </button>
-      <div className="columns">
+      <div className="block">
+        <button
+          onClick={() =>
+            setFilterState((f) => ({
+              ...f,
+              categories: _.mapValues(f.categories, (v, k) =>
+                v === undefined ? undefined : categories[k as keyof Categories]
+              ),
+            }))
+          }
+        >
+          Select all
+        </button>
+        <button
+          onClick={() =>
+            setFilterState((f) => ({
+              ...f,
+              categories: _.mapValues(f.categories, (v) =>
+                v === undefined ? undefined : []
+              ),
+            }))
+          }
+        >
+          De-select all
+        </button>
+      </div>
+      <div className="columns block">
         {categoryKeys.map((category) => (
           <div className="column" key={category}>
             <div>
