@@ -26,6 +26,6 @@
     "quicktype": "^15.0.261",
     "react-refresh": "0.10.0",
     "typescript": "latest",
-    "vite": "^4.3.8"
+    "vite": "^4.4.9"
   }
 }
