@@ -82,7 +82,10 @@ export function Table({ data, sortState, setSortState }: TableProps) {
             <SortButton text="Stock" column="stock" />
           </th>
           <th>
-            <SortButton text="Cost-Effectiveness" column="millsPerDollar" />
+            <SortButton text="Value" column="value" />
+          </th>
+          <th>
+            <SortButton text="Cost-Effectiveness" column="alcMillsPerDollar" />
           </th>
         </tr>
       </thead>
@@ -99,7 +102,8 @@ export function Table({ data, sortState, setSortState }: TableProps) {
             category,
             subCategory,
             stock,
-            millsPerDollar,
+            value,
+            alcMillsPerDollar,
           }) => (
             <tr key={id}>
               <td>{rank}</td>
@@ -115,7 +119,8 @@ export function Table({ data, sortState, setSortState }: TableProps) {
               <td>{category}</td>
               <td>{subCategory}</td>
               <td>{stock}</td>
-              <td>{millsPerDollar.toFixed(3)} mL/$</td>
+              <td>{value.toFixed(2)} $/L</td>
+              <td>{alcMillsPerDollar.toFixed(1)} mL(alc)/$</td>
             </tr>
           )
         )}
