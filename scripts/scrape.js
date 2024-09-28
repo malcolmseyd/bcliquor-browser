@@ -26,9 +26,11 @@ const data = json.hits.hits
 	}))
 	.map((x) => ({
 		...x,
-		millsPerDollar: (x.volume * 1000 * x.items * (x.percent / 100)) / x.price,
+		drinkValue: (x.volume * 1000 * x.items) / x.price,
+		alcoholValue: (x.volume * 1000 * x.items * (x.percent / 100)) / x.price,
 	}))
-	.sort((a, b) => b.millsPerDollar - a.millsPerDollar);
+	.sort((a, b) => b.drinkValue - a.drinkValue)
+	.sort((a, b) => b.alcoholValue - a.alcoholValue);
 
 console.log("making categories")
 const categories = _(data)

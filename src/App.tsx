@@ -33,7 +33,7 @@ function App() {
   const [page, setPage] = useState(0);
   const [limit, setLimit] = useState(Math.min(data.length, 1000));
   const [sortState, setSortState] = useState<SortState>({
-    column: "millsPerDollar",
+    column: "alcoholValue",
     descending: true,
   });
   const [search, setSearch] = useState<string>("");
