@@ -33,7 +33,7 @@ function App() {
   const [page, setPage] = useState(0);
   const [limit, setLimit] = useState(Math.min(data.length, 1000));
   const [sortState, setSortState] = useState<SortState>({
-    column: "alcMillsPerDollar",
+    column: "alcoholValue",
     descending: true,
   });
   const [search, setSearch] = useState<string>("");
@@ -69,9 +69,6 @@ function App() {
             <a href="https://github.com/malcolmseyd/bcliquor-browser/actions/workflows/rebuild.yml">
               {metadata.scrapedAt.toLocaleString()}
             </a>
-          </p>
-          <p>
-            Note: 'Value' represents the value of a litre of drink, while 'Cost-Effectiveness' represents the amount of pure alcohol per dollar.
           </p>
         </div>
         <div className="block">

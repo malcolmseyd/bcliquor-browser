@@ -1,15 +1,15 @@
 export interface Data {
-    alcMillsPerDollar: number;
-    category:          Category;
-    id:                string;
-    items:             number;
-    name:              string;
-    percent:           number;
-    price:             number;
-    stock:             number;
-    subCategory:       SubCategory;
-    value:             number;
-    volume:            number;
+    alcoholValue: number;
+    category:     Category;
+    drinkValue:   number;
+    id:           string;
+    items:        number;
+    name:         string;
+    percent:      number;
+    price:        number;
+    stock:        number;
+    subCategory:  SubCategory;
+    volume:       number;
 }
 
 export enum Category {

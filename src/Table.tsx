@@ -27,13 +27,17 @@ export function Table({ data, sortState, setSortState }: TableProps) {
     );
   }
 
-  const SortButton = ({ column, text }: { column: keyof Data; text: string }) =>
+  const SortButton = ({ column, text, unit }: { column: keyof Data; text: string, unit?: string | undefined }) =>
     column !== sortState.column ? (
       <span
         className="icon-text is-clickable"
         onClick={() => setSortState({ column, descending: true })}
       >
         <span>{text}</span>
+        {unit && <>
+          <br />
+          <span>{unit}</span>
+        </>}
         <span className="icon">
           <img src={sortSVG}></img>
         </span>
@@ -46,6 +50,10 @@ export function Table({ data, sortState, setSortState }: TableProps) {
         }}
       >
         <span>{text}</span>
+        {unit && <>
+          <br />
+          <span>{unit}</span>
+        </>}
         <span className="icon">
           <img src={sortState.descending ? downSVG : upSVG}></img>
         </span>
@@ -82,10 +90,10 @@ export function Table({ data, sortState, setSortState }: TableProps) {
             <SortButton text="Stock" column="stock" />
           </th>
           <th>
-            <SortButton text="Value" column="value" />
+            <SortButton text="Drink Value" unit="(mL/$)" column="drinkValue" />
           </th>
           <th>
-            <SortButton text="Cost-Effectiveness" column="alcMillsPerDollar" />
+            <SortButton text="Alcohol Value" unit="(mL alcohol/$)" column="alcoholValue" />
           </th>
         </tr>
       </thead>
@@ -102,8 +110,8 @@ export function Table({ data, sortState, setSortState }: TableProps) {
             category,
             subCategory,
             stock,
-            value,
-            alcMillsPerDollar,
+            drinkValue,
+            alcoholValue,
           }) => (
             <tr key={id}>
               <td>{rank}</td>
@@ -119,8 +127,8 @@ export function Table({ data, sortState, setSortState }: TableProps) {
               <td>{category}</td>
               <td>{subCategory}</td>
               <td>{stock}</td>
-              <td>{value.toFixed(2)} $/L</td>
-              <td>{alcMillsPerDollar.toFixed(1)} mL(alc)/$</td>
+              <td>{drinkValue.toFixed(1)}</td>
+              <td>{alcoholValue.toFixed(1)}</td>
             </tr>
           )
         )}
