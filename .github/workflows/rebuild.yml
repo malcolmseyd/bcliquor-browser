@@ -45,3 +45,13 @@ jobs:
           git commit -m "built at $(date +"%Y.%m.%d")"
           git push -f origin build
 
+      - name: Archive data in Cloudflare R2
+        run: |
+          FILENAME="data_$(date -Iseconds).json.zst"
+          zstd src/json/data.json -o "$FILENAME"
+          aws s3 cp "$FILENAME" "s3://bcliquor/$FILENAME"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: auto
+          AWS_ENDPOINT_URL: https://${{ secrets.R2_ACCOUNT_ID }}.r2.cloudflarestorage.com
