@@ -57,7 +57,7 @@ jobs:
         run: |
           FILENAME="data_$(date -Iseconds).json.zst"
           zstd src/json/data.json -o "$FILENAME"
-          aws s3 cp "$FILENAME" "s3://bcliquor/$FILENAME"
+          aws s3 cp --debug "$FILENAME" "s3://bcliquor/$FILENAME"
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
