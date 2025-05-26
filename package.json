@@ -1,6 +1,11 @@
 {
   "name": "bcliquor-browser",
   "version": "0.1.0",
+  "engines": {
+    "node": ">= 23.11",
+    "npm": ">= 10.9.2"
+  },
+  "type": "module",
   "dependencies": {
     "bulma": "^0.9.4",
     "fuse.js": "^6.6.2",
@@ -16,8 +21,8 @@
   "scripts": {
     "start": "vite",
     "build": "rm -rf dist/ && vite build",
-    "generate": "cd src/json/ && bun run ../../scripts/scrape.js && quicktype -l typescript categories.json --just-types --alphabetize-properties > categories.d.ts && quicktype -l typescript data.json --just-types --alphabetize-properties > data.d.ts && quicktype -l typescript metadata.json --just-types --alphabetize-properties > metadata.d.ts",
-    "fetch": "cd src/json/ && bun run ../../scripts/scrape.js"
+    "generate": "cd src/json/ && node ../../scripts/scrape.js && quicktype -l typescript categories.json --just-types --alphabetize-properties > categories.d.ts && quicktype -l typescript data.json --just-types --alphabetize-properties > data.d.ts && quicktype -l typescript metadata.json --just-types --alphabetize-properties > metadata.d.ts",
+    "fetch": "cd src/json/ && node ../../scripts/scrape.js"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.182",
