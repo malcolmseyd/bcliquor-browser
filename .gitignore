@@ -32,7 +32,6 @@ yarn-error.log*
 
 # parcel
 .parcel-cache/
-dist/
 
 # downloaded data
 src/json/*.json
